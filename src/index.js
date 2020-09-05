@@ -1,67 +1,29 @@
-// OO solution
 document.addEventListener("DOMContentLoaded", () => {
-  // initialize taskList class
-  const taskList = new TaskList();
-  //grab all the necessary DOM elements
+  // your code <here></here>
 
-  //form and relevant input fields
-  const newTaskForm = document.getElementById("create-task-form");
-  const newTaskDescription = document.getElementById("new-task-description");
-  const newTaskPriority = document.getElementById("new-task-priority");
-
-  //ul where new tasks will live on the DOM
-  const taskUl = document.getElementById("tasks");
-
-  const renderApp = () => (taskUl.innerHTML = taskList.renderTasks());
-  //attach event listeners
-
-  newTaskForm.addEventListener("submit", (e) => {
+  // when clock the button
+  const submit = document.querySelector("[type=submit]");
+  const tasks = document.querySelector("#tasks");
+  const newTask = document.querySelector("#new-task-description");
+  // when todo list
+  submit.addEventListener("click", (e) => {
     e.preventDefault();
-    taskList.createNewTask(newTaskDescription.value);
-    // reset form
-    e.target.reset();
-    renderApp();
-  });
-
-  taskUl.addEventListener("click", (e) => {
-    if (e.target.nodeName === "BUTTON") {
-      taskList.deleteTask(e.target.dataset.description);
-      renderApp();
+    // prevent from adding empty tasks
+    if (newTask.value == null || newTask.value === "") {
+      return;
     }
+    let listItem = document.createElement("li");
+    // <button data-description="d">X</button>
+    const deleteButton = document.createElement("button");
+    deleteButton.innerText = "X";
+    deleteButton.setAttribute("data-description", "d");
+    listItem.innerText = newTask.value;
+    listItem.appendChild(deleteButton);
+    tasks.appendChild(listItem);
+    newTask.value = "";
+
+    deleteButton.addEventListener("click", (e) => {
+      deleteButton.parentElement.remove();
+    });
   });
 });
-
-class TaskList {
-  constructor() {
-    this.tasks = [];
-  }
-
-  createNewTask(description) {
-    const newTask = new Task(description);
-    this.tasks.push(newTask);
-  }
-
-  renderTasks() {
-    return this.tasks.map((task) => task.render()).join("");
-  }
-
-  deleteTask(description) {
-    this.tasks = this.tasks.filter((task) => task.description !== description);
-  }
-}
-
-
-class Task {
-  constructor(description) {
-    this.description = description;
-  }
-
-  render() {
-    return `
-      <li>
-        ${this.description}
-        <button data-description="${this.description}">X</button>
-      </li>
-      `;
-  }
-}
